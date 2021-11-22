@@ -1,7 +1,7 @@
-import java.util.*;
+import java.util.Scanner;
 import java.util.stream.Stream;
 
-public class FirstClass {
+public class Main2577 {
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
         int a = in.nextInt();
@@ -21,7 +21,7 @@ public class FirstClass {
                 }
             }
             arr[i] = count;
-         }
+        }
         for(int k=0;k<=9;k++){
             System.out.println(arr[k]);
         }
