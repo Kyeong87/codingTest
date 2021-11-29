@@ -1,8 +1,7 @@
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class FirstClass {
+public class Main11720 {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
