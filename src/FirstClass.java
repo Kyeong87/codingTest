@@ -1,57 +1,117 @@
 import java.io.*;
 import java.util.*;
-import java.util.stream.*;
-import static java.util.stream.Collectors.toList;
-/*
 
-100
-44 55 11 15 4 72 26 91 80 14 43 78 70 75 36 83 78 91 17 17 54 65 60 21 58 98 87 45 75 97 81 18 51 43 84 54 66 10 44 45 23 38 22 44 65 9 78 42 100 94 58 5 11 69 26 20 19 64 64 93 60 96 10 10 39 94 15 4 3 10 1 77 48 74 20 12 83 97 5 82 43 15 86 5 35 63 24 53 27 87 45 38 34 7 48 24 100 14 80 54
+class Node {
+    private int x;
+    private int y;
 
-
- */
-
-public class FirstClass {
-
-    // Complete the sockMerchant function below.
-    static int sockMerchant(int n, int[] ar) {
-        int result = 0;
-
-        Arrays.sort(ar);
-
-        for (int i = 0; i < n - 1; i++) {
-            if (i < n && ar[i] == ar[i + 1]) {
-                result++;
-                i = i + 1;
-            }
-        }
-        return result;
+    public Node(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    private static final Scanner scanner = new Scanner(System.in);
+    public int getX() {
+        return this.x;
+    }
 
-    public static void main(String[] args) throws IOException {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+    public int getY() {
+        return this.y;
+    }
+}
 
-        int n = scanner.nextInt();
-        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+class Result {
 
-        int[] ar = new int[n];
+    public static int n = 3;
+    public static int m = 3;
+    public static int[][] graph = new int[3][3];
+    public static int[][] count = new int[8][8];
 
-        String[] arItems = scanner.nextLine().split(" ");
-        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+    // 이동할 8 가지 방향 정의 (상, 하, 좌, 우, 대각위오른쪽, 대각아래오른쪽, 대각위왼쪽, 대각아래왼쪽)
+    public static int dx[] = {-1, 1, 0, 0, -1, 1, -1, 1};
+    public static int dy[] = {0, 0, -1, 1, 1, 1, -1, -1};
 
-        for (int i = 0; i < n; i++) {
-            int arItem = Integer.parseInt(arItems[i]);
-            ar[i] = arItem;
+    public static void solution(String s, String keypad) {
+        // s = 비밀번호
+        // keypad = 키 순서
+        int j = 0;
+        for (int i = 0; i < 9; i++) {
+            if(i==6) j=0;
+            if(i>=3 && i<=5) {
+                graph[1][j] = keypad.charAt(i) - '0';
+
+                j++;
+            }else if(i>=6 && i<=8) {
+                graph[2][j] = keypad.charAt(i) - '0';
+                j++;
+            }else {
+                graph[0][i] = keypad.charAt(i) - '0';
+            }
         }
 
-        int result = sockMerchant(n, ar);
+        int sumcount = 0;
+        for(int l=0;l<s.length();l++) {
+            int target = s.charAt(l) - '0';
+            for(int it=0;it<3;it++) {
+                for(int k=0;k<3;k++) {
+                    if(graph[it][k]==target) {
+                        if(l==0) {
+                            bfs(it, k, l);
+                        }else {
+                            if(target == s.charAt(l-1) - '0') {
 
-        bufferedWriter.write(String.valueOf(result));
-        bufferedWriter.newLine();
+                                l = 1 + l;
+                            }else if (Arrays.stream(count[l-1]).anyMatch(i -> i == target)) {
+//                                System.out.println(Arrays.asList(arr).contains(stringToSearch));
+//                                arr[i].equals(stringToSearch);
+                                sumcount = sumcount + 1;
+                                bfs(it, k, l);
+                            } else {
+                                sumcount = sumcount + 2;
+                                bfs(it, k, l);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println(sumcount);
+    }
+    public static int[][] bfs(int x, int y, int j) {
 
-        bufferedWriter.close();
+        Queue<Node> q = new LinkedList<>();
+        q.offer(new Node(x, y));
 
-        scanner.close();
+        while(!q.isEmpty()) {
+            Node node = q.poll();
+            x = node.getX();
+            y = node.getY();
+            // 현재 위치에서 8가지 방향으로의 위치 확인
+            for (int i = 0; i < 8; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+                if (graph[nx][ny] == 0) continue;
+                if (graph[nx][ny] > 0) {
+                    count[j][i] = graph[nx][ny];
+                }
+            }
+        }
+
+        return count;
+    }
+
+}
+
+public class FirstClass {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        String s = bufferedReader.readLine();
+
+        String keypad = bufferedReader.readLine();
+
+        Result.solution(s, keypad);
+
+        bufferedReader.close();
     }
 }
