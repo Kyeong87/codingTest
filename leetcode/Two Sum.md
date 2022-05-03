@@ -52,7 +52,12 @@ class Solution {
     - 키 값이 없으면 map.put 으로 [타켓 - nums의 값(9-2), 7] 값을 저장 해줌 => 즉, 7 값을 찾는거임, 두개를 더해서 9 가 되어야하니까
     - 키 값이 있으면 즉, 더해서 9가 되는 값을 찾으면 리턴
 - 획기적이다 ㅋㅋ 이걸 어떻게 생각 해서 푸냐고!!!!!!!
-    
+- map print
+  -     for(Integer key : map.keySet()){
+            Integer value = map.get(key);
+            System.out.println(key+" : "+value);
+        }
+  - or System.out.println(map);
 ```java
 class Solution {
     public int[] twoSum(int[] nums, int target) {

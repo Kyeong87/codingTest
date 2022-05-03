@@ -20,33 +20,37 @@ Return the head of the merged linked list.
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
-class Solution {
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+public class MergeTwoSortedLists {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode result_node = new ListNode();
 
-        if(list1==null && list2!=null) return list2;
-        else if(list2==null && list1!=null) return list1;
-        else if(list1==null && list2==null) return null;
+        // 내가 지정한 값이 head로
+        ListNode curr_node = result_node;
 
-        ListNode firstNode = new ListNode(0);
-        ListNode nextNode = firstNode;
+        while(l1 != null && l2 != null) {
+            if(l1.val < l2.val ) {
+                curr_node.next = l1;
+                l1 = l1.next;
+            } else {
+                curr_node.next = l2;
+                l2 = l2.next;
+            } // if ~ else end
 
-        while(list1 != null && list2 != null) {
-            if(list1.val > list2.val) {
-                nextNode.next = list2;
-                list2 = list2.next;
-            }else {
-                nextNode.next = list1;
-                list1 = list1.next;
-            }
-            nextNode = nextNode.next;
+            // 노드가 위의 과정을 끝낸 현재와 같도록
+            curr_node = curr_node.next;
+        } // while end
+
+        // 둘 중 하나가 null이 되어도 다른 하나가 끝날 때 까지 실행
+        // l1이 null이면 l2를 저장
+        if(l1 == null) {
+            curr_node.next = l2;
         }
-        if (list1 == null) {
-            nextNode.next = list2;
+        // l2가 null이면 l1을 저장
+        if(l2 == null) {
+            curr_node.next = l1;
         }
-        if (list2 == null) {
-            nextNode.next = list1;
-        }
-        return firstNode.next;
+
+        return result_node.next;
     }
 }
 ```
